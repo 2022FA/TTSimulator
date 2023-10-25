@@ -19,3 +19,10 @@ public class Character {
             System.out.println(feature + " not found in " + name + "'s inventory.");
         }
     }
+ public void showInventory() {
+        System.out.println(name + "'s Inventory:");
+        for (String item :features) {
+          System.out.println(feature);
+        }
+        System.out.println("Gold: " + gold);
+    }
