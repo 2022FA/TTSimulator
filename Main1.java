@@ -23,8 +23,7 @@ public class Main1 {
         party = getStringInput(keyboard, "Enter party name");
         characterName = getStringInput(keyboard, party + " create a character name");
         characterRace = characterRaceValidation(keyboard, characterName);
-
-        characterClass = getStringInput(keyboard, "Enter the class for " + characterName);
+        characterClass = characterClassValidation(keyboard, characterName);
 
         // Calculate character's base health based on class
         characterBaseHealth = characterBaseHPBasedOnClass(characterClass, characterBaseHealth);
@@ -34,8 +33,8 @@ public class Main1 {
         characterArmorClass = integerValidation(keyboard, "Armor Class", characterName);
 
         // Gather character inventory and features
-        characterInventory = getInventoryInput(keyboard, characterName);
-        characterFeatures = getFeaturesInput(keyboard, characterName);
+        characterInventory = startingItemsBasedOnClass(characterClass, characterName);
+        characterFeatures = getFeaturesInput(characterClass, characterName);
 
         // Display the collected character information
         consoleOutput(party, characterName, characterRace, characterBaseHealth, characterAbilityScore, characterArmorClass, characterProficiencyBonus, characterLevel, characterClass, characterInventory, characterFeatures);
@@ -48,7 +47,7 @@ public class Main1 {
             characterLevel = changeCharacterInfo(keyboard, characterLevel);
 
             // Calculate the proficiency bonus based on the character's class and level
-            characterProficiencyBonus = characterProficiencyBonus(characterClass, characterLevel);
+            characterProficiencyBonus = characterProficiencyBonus(characterLevel);
 
             // Display the updated character information
             consoleOutput(party, characterName, characterRace, characterBaseHealth, characterAbilityScore, characterArmorClass, characterProficiencyBonus, characterLevel, characterClass, characterInventory, characterFeatures);
@@ -64,13 +63,11 @@ public class Main1 {
         // Close the Scanner to release resources
         keyboard.close();
     }
-
-    private static int characterProficiencyBonus(String characterClass, int characterLevel) {
-        int proficiencyBonus = 0;
-        if (characterClass.equalsIgnoreCase("barbarian")) {
-            proficiencyBonus = barbarianProficiencyBonusBasedOnLevel(characterLevel, proficiencyBonus);
-        }
-        return proficiencyBonus;
+    //Calculates the bonus based on character level
+    private static int characterProficiencyBonus(int characterLevel) {
+            int proficiencyBonus;
+        proficiencyBonus = 2 + ((int) (double) (characterLevel - 1) / 4);
+            return proficiencyBonus;
     }
 
     private static int changeCharacterInfo(Scanner keyboard, int characterLevel) {
@@ -91,14 +88,32 @@ public class Main1 {
     private static int characterBaseHPBasedOnClass(String characterClass, int characterBaseHealth) {
         if (characterClass.equalsIgnoreCase("barbarian")) {
             characterBaseHealth = 12;
+        } else if (characterClass.equalsIgnoreCase("artificer")) {
+            characterBaseHealth = 8;
+        }else if (characterClass.equalsIgnoreCase("bard")) {
+            characterBaseHealth = 8;
+        }else if (characterClass.equalsIgnoreCase("cleric")) {
+            characterBaseHealth = 8;
+        }else if (characterClass.equalsIgnoreCase("druid")) {
+            characterBaseHealth = 8;
+        }else if (characterClass.equalsIgnoreCase("fighter")) {
+            characterBaseHealth = 10;
+        }else if (characterClass.equalsIgnoreCase("monk")) {
+            characterBaseHealth = 8;
+        }else if (characterClass.equalsIgnoreCase("paladin")) {
+            characterBaseHealth = 10;
+        }else if (characterClass.equalsIgnoreCase("ranger")) {
+            characterBaseHealth = 10;
+        }else if (characterClass.equalsIgnoreCase("rogue")) {
+            characterBaseHealth = 8;
+        }else if (characterClass.equalsIgnoreCase("sorcerer")) {
+            characterBaseHealth = 6;
+        }else if (characterClass.equalsIgnoreCase("warlock")) {
+            characterBaseHealth = 8;
+        }else if (characterClass.equalsIgnoreCase("wizard")) {
+            characterBaseHealth = 6;
         }
         return characterBaseHealth;
-    }
-
-    //For class barbarian that assigns a proficiencyBonus based on the character level 2+1/2
-    private static int barbarianProficiencyBonusBasedOnLevel(int characterLevel, int proficiencyBonus) {
-        proficiencyBonus = 2 + ((int) (double) (characterLevel - 1) /4);
-        return proficiencyBonus;
     }
 
     // Validation loop for character Race.
@@ -112,6 +127,23 @@ public class Main1 {
                 break;
             } else {
                 System.out.println("Enter a valid race. Please choose from dragonborn, dwarf, elf, gnome, half-elf, half-orc, halfling, human, or tiefling.");
+            }
+        } while (true);
+
+        return characterRace;
+    }
+    // Validation loop for character Class.
+    private static String characterClassValidation(Scanner keyboard, String characterName) {
+        String characterRace;
+        do {
+            characterRace = getStringInput(keyboard, "Choose a Class for " + characterName);
+            if (characterRace.equalsIgnoreCase("bard") || characterRace.equalsIgnoreCase("druid") || characterRace.equalsIgnoreCase("paladin") ||
+                    characterRace.equalsIgnoreCase("barbarian") || characterRace.equalsIgnoreCase("fighter") || characterRace.equalsIgnoreCase("ranger") ||
+                    characterRace.equalsIgnoreCase("cleric") || characterRace.equalsIgnoreCase("monk") || characterRace.equalsIgnoreCase("rogue")
+                    || characterRace.equalsIgnoreCase("sorcerer") || characterRace.equalsIgnoreCase("warlock") || characterRace.equalsIgnoreCase("wizard")) {
+                break;
+            } else {
+                System.out.println("Enter a valid Class. Please choose from bard, barbarian, cleric, sorcerer, druid, fighter, monk, warlock, paladin, ranger, rogue, wizard.");
             }
         } while (true);
 
@@ -142,31 +174,41 @@ public class Main1 {
         return inputValue;
     }
 
-    //Collect character inventory
-    private static ArrayList<String> getInventoryInput(Scanner keyboard, String characterName) {
+    //character starting items based on class
+    private static ArrayList<String> startingItemsBasedOnClass(String characterClass, String characterName)  {
         ArrayList<String> inventory = new ArrayList<>();
-        System.out.println("Enter the inventory for " + characterName + " (type 'done' when finished):");
-        while (true) {
-            String input = keyboard.nextLine();
-            if (input.equalsIgnoreCase("done")) {
-                break;
-            }
-            inventory.add(input);
+        if(characterClass.equalsIgnoreCase("barbarian")){
+            inventory.add("Great Axe " + "Two Handed Axes " + "Explorer's Pack " + "4 Javelins");
+        } else if (characterClass.equalsIgnoreCase("bard")) {
+            inventory.add("Rapier " + "Dagger" + "Lute " + "Diplomat's Pack " + "Leather Armor");
+        } else if (characterClass.equalsIgnoreCase("cleric")) {
+            inventory.add("Mace" + "Scale Mail" + "Light Crossbow" + "20 Bolts" + "Priest's Pack" + "Shield" + "Holy Symbol");
+        } else if (characterClass.equalsIgnoreCase("druid")) {
+            inventory.add("Wooden Shield" + "Scimitar" + "Leather Armor" + "Explorer's Pack" + "Druidic Focus");
+        } else if (characterClass.equalsIgnoreCase("fighter")) {
+            inventory.add("Chain Mail" + "Martial Weapon" + "Shield" + "Light Crossbow" + "20 Bolts" + "Dungeoneer's Pack");
+        } else if (characterClass.equalsIgnoreCase("monk")) {
+            inventory.add("Shortsword" + "Dungeoneer's Pack" + "10 Darts");
+        } else if (characterClass.equalsIgnoreCase("wizard")) {
+            inventory.add("Quaterstaff" + "component pouch" + "scholar's pack" + "spellbook");
+        } else if (characterClass.equalsIgnoreCase("warlock")) {
+            inventory.add("light crossbow" + "20 bolts" + "component pouch" + "dungeoneer's pack");
+        } else if (characterClass.equalsIgnoreCase("Sorcerer")) {
+            inventory.add("light crossbow" + "20 bolts" + "component pouch" + "dungeoneer's pack" + "two daggers");
+        } else if (characterClass.equalsIgnoreCase("warrior")) {
+            inventory.add("Light Crossbow" + "20 Bolts" + "Scholar's Pack" + "Leather Armor" + "Simple Weapon" + "Two Daggers");
+        } else if (characterClass.equalsIgnoreCase("ranger")) {
+            inventory.add("Scale Mail" + "Two Shortswords" + "Dungeoneer's Pack" + "Longbow" + "20 Arrows");
+        } else if (characterClass.equalsIgnoreCase("paladin")) {
+            inventory.add("Martial Weapon" + "Shield" + "Five Javelins" + "Priest's Pack" + "Chain Mail" + "Holy Symbol");
         }
         return inventory;
     }
 
-    //Collect character features
-    private static ArrayList<String> getFeaturesInput(Scanner keyboard, String characterName) {
+
+    private static ArrayList<String> getFeaturesInput(String characterClass, String characterName) {
         ArrayList<String> features = new ArrayList<>();
-        System.out.println("Enter the features for " + characterName + " (type 'done' when finished):");
-        while (true) {
-            String input = keyboard.nextLine();
-            if (input.equalsIgnoreCase("done")) {
-                break;
-            }
-            features.add(input);
-        }
+
         return features;
     }
 
@@ -184,7 +226,13 @@ public class Main1 {
 
         System.out.println("Inventory:");
         for (String item : characterInventory) {
-            System.out.println(" - " + item);
+            String[] items = item.split(" "); // Split the items by space
+            System.out.print("");
+            for (String it : items) {
+                System.out.println(it); // Print each item on a new line
+                System.out.print(""); // Add a hyphen for the next item
+            }
+            System.out.println(); // Add an empty line between items
         }
 
         System.out.println("Features:");
