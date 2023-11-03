@@ -226,13 +226,13 @@ public class Main1 {
 
         System.out.println("Inventory:");
         for (String item : characterInventory) {
-            String[] items = item.split(" "); // Split the items by space
+            String[] items = item.split(" ");//splits items on new line
             System.out.print("");
             for (String it : items) {
-                System.out.println(it); // Print each item on a new line
-                System.out.print(""); // Add a hyphen for the next item
+                System.out.println(it);
+                System.out.print("");
             }
-            System.out.println(); // Add an empty line between items
+            System.out.println();
         }
 
         System.out.println("Features:");
