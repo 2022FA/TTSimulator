@@ -20,8 +20,7 @@ public class Test {
         character.addGold(20);
         character.addItems(items);
 
-        displayCharacterInformation(party, characterRace, characterAbilityScore, characterArmorClass, 
-                                    characterProficiencyBonus, characterClass, character);
+        displayCharacterInformation(party, characterRace, characterAbilityScore, characterArmorClass, characterProficiencyBonus, characterClass, character);
     }
 
     private static String createParty() {
