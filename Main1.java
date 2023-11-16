@@ -1,40 +1,56 @@
-import java.util.Scanner;
 import java.util.ArrayList;
+import java.util.Hashtable;
+import java.util.Scanner;
 
 public class Main1 {
-    public static void main(String[] args) {
-        // Declare variables to store character and party information
-        String party;
-        String characterName;
-        String characterRace;
-        int characterAbilityScore;
-        int characterArmorClass;
-        int characterProficiencyBonus = 2;
-        int characterLevel = 1;
-        int characterBaseHealth = 0; // Initialize characterBaseHealth
-        String characterClass;
-        ArrayList<String> characterInventory;
-        ArrayList<String> characterFeatures;
+    private static int characterProficiencyBonus = 2;
+    private static int characterLevel = 1;
+    private static int characterBaseHealth = 0;
 
+    // Defines features
+    private static final Hashtable<Integer, String> featuresList = new Hashtable<>() {{
+        put(1, "Rage, Unarmored Defense");
+        put(2, "Reckless Attack, Danger Sense");
+        put(3, "Primal Path, Primal Knowledge");
+        put(4, "Ability Score Improvement");
+        put(5, "Extra Attack, Fast Movement");
+        put(6, "Path feature");
+        put(7, "Feral Instinct, Instinctive Pounce");
+        put(8, "Ability Score");
+        put(9, "Brutal Critical");
+        put(10, "Path feature, Primal knowledge");
+        put(11, "Relentless Rage");
+        put(12, "Ability Score Improvement");
+        put(13, "Brutal Critical");
+        put(14, "Path feature");
+        put(15, "Persistent Rage");
+        put(16, "Ability Score Improvement");
+        put(17, "Brutal Critical");
+        put(18, "Indomitable Might");
+        put(19, "Ability Score Improvement");
+        put(20, "Primal Champion");
+    }};
+
+    public static void main(String[] args) {
         // Create a Scanner object to read user input
         Scanner keyboard = new Scanner(System.in);
 
         // Prompt the user for various character and party details
-        party = getStringInput(keyboard, "Enter party name");
-        characterName = getStringInput(keyboard, party + " create a character name");
-        characterRace = characterRaceValidation(keyboard, characterName);
-        characterClass = characterClassValidation(keyboard, characterName);
+        String party = getStringInput(keyboard, "Enter party name");
+        String characterName = getStringInput(keyboard, party + " create a character name");
+        String characterRace = characterRaceValidation(keyboard, characterName);
+        String characterClass = characterClassValidation(keyboard, characterName);
 
         // Calculate character's base health based on class
         characterBaseHealth = characterBaseHPBasedOnClass(characterClass, characterBaseHealth);
 
         // Prompt for and validate other character attributes
-        characterAbilityScore = integerValidation(keyboard, "Ability Score", characterName);
-        characterArmorClass = integerValidation(keyboard, "Armor Class", characterName);
+        int characterAbilityScore = integerValidation(keyboard, "Ability Score", characterName);
+        int characterArmorClass = integerValidation(keyboard, "Armor Class", characterName);
 
         // Gather character inventory and features
-        characterInventory = startingItemsBasedOnClass(characterClass, characterName);
-        characterFeatures = getFeaturesInput(characterClass, characterName);
+        ArrayList<String> characterInventory = startingItemsBasedOnClass(characterClass);
+        ArrayList<String> characterFeatures = getFeaturesInput(characterLevel);
 
         // Display the collected character information
         consoleOutput(party, characterName, characterRace, characterBaseHealth, characterAbilityScore, characterArmorClass, characterProficiencyBonus, characterLevel, characterClass, characterInventory, characterFeatures);
@@ -42,12 +58,15 @@ public class Main1 {
         boolean continuePlaying = true;
 
         while (continuePlaying) {
-            // Collect initial character information (same as before)
+            // Collect initial character information
 
             characterLevel = changeCharacterInfo(keyboard, characterLevel);
 
             // Calculate the proficiency bonus based on the character's class and level
             characterProficiencyBonus = characterProficiencyBonus(characterLevel);
+
+            // Update the character features based on the new level
+            characterFeatures = getFeaturesInput(characterLevel);
 
             // Display the updated character information
             consoleOutput(party, characterName, characterRace, characterBaseHealth, characterAbilityScore, characterArmorClass, characterProficiencyBonus, characterLevel, characterClass, characterInventory, characterFeatures);
@@ -63,11 +82,21 @@ public class Main1 {
         // Close the Scanner to release resources
         keyboard.close();
     }
+
+    private static ArrayList<String> getFeaturesInput(int characterLevel) {
+        ArrayList<String> features = new ArrayList<>();
+        for (int level = 1; level <= characterLevel; level++) {
+            if (featuresList.containsKey(level)) {
+                features.add(featuresList.get(level));
+            }
+        }
+        return features;
+    }
     //Calculates the bonus based on character level
     private static int characterProficiencyBonus(int characterLevel) {
-            int proficiencyBonus;
+        int proficiencyBonus;
         proficiencyBonus = 2 + ((int) (double) (characterLevel - 1) / 4);
-            return proficiencyBonus;
+        return proficiencyBonus;
     }
 
     private static int changeCharacterInfo(Scanner keyboard, int characterLevel) {
@@ -175,7 +204,7 @@ public class Main1 {
     }
 
     //character starting items based on class
-    private static ArrayList<String> startingItemsBasedOnClass(String characterClass, String characterName)  {
+    private static ArrayList<String> startingItemsBasedOnClass(String characterClass)  {
         ArrayList<String> inventory = new ArrayList<>();
         if(characterClass.equalsIgnoreCase("barbarian")){
             inventory.add("Great Axe " + "Two Handed Axes " + "Explorer's Pack " + "4 Javelins");
@@ -203,13 +232,6 @@ public class Main1 {
             inventory.add("Martial Weapon" + "Shield" + "Five Javelins" + "Priest's Pack" + "Chain Mail" + "Holy Symbol");
         }
         return inventory;
-    }
-
-
-    private static ArrayList<String> getFeaturesInput(String characterClass, String characterName) {
-        ArrayList<String> features = new ArrayList<>();
-
-        return features;
     }
 
     //Displays character information
